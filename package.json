@@ -22,7 +22,6 @@
   },
   "homepage": "https://gitlab.com/Blvnp_Developers/technical-test#readme",
   "dependencies": {
-    "@esbuild/darwin-arm64": "^0.20.2",
     "cors": "^2.8.5",
     "esbuild": "^0.20.2",
     "express": "^4.17.1",
