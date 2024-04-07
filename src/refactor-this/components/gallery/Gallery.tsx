@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import ImageDataGetter from "../../data/ImageDataGetter";
-import { Pages } from "../../common/constants";
 import { Image } from "../../models/Image";
 import ListOfImages from "./ListOfImages";
 import PaginationNav from "./PaginationNav";
@@ -8,13 +7,15 @@ import { ThreeDot } from "react-loading-indicators";
 
 interface Props {
     category: string;
+    onPageCountChange: (pageCount: number) => void;
+    pageCount: number;
 }
 
 // create a new component named ImageLists that will display the images
 // based on the category selected
-const Gallery = ({ category }: Props) => {
+const Gallery = ({ category, pageCount, onPageCountChange }: Props) => {
     const [images, setImages] = useState<Image[]>([]);
-    const [pageCount, setPageCount] = useState(0);
+    // const [pageCount, setPageCount] = useState(pageCount);
     // declare isFetching state
     const [isFetching, setIsFetching] = useState(false);
     // declare canPreviousPage state and set it to false
@@ -24,49 +25,39 @@ const Gallery = ({ category }: Props) => {
 
     useEffect(() => {
         fetchData();
-    }, [pageCount, setImages, category, setCanNextPage, setCanPreviousPage,]); // Fetch data whenever page changes
+    }, [
+        pageCount,
+        setImages,
+        setCanNextPage,
+        setCanPreviousPage,
+        category,
+        onPageCountChange,
+    ]); // Fetch data whenever page changes
 
     const handlePageClick = (index: number) => {
-        setPageCount(index);
+        onPageCountChange(index);
+        // setPageCount(index);
     }
 
     const fetchData = async () => {
         setImages([]);
         setIsFetching(true);
-        let mergedImages: Image[] = [];
         const pageCountForPagination = pageCount + 1;
         try {
-            switch (category) {
-                case Pages.nature:
-                    mergedImages = [
-                        ...(await ImageDataGetter.getNatureImagesFromPage((pageCountForPagination * 3))),
-                        ...(await ImageDataGetter.getNatureImagesFromPage((pageCountForPagination * 3) - 1)),
-                        ...(await ImageDataGetter.getNatureImagesFromPage((pageCountForPagination * 3) - 2)),
-                    ];
-                    break;
-                case Pages.architecture:
-                    mergedImages = [
-                        ...(await ImageDataGetter.getArchitectureImagesFromPage((pageCountForPagination * 3) - 2)),
-                        ...(await ImageDataGetter.getArchitectureImagesFromPage((pageCountForPagination * 3) - 1)),
-                        ...(await ImageDataGetter.getArchitectureImagesFromPage((pageCountForPagination * 3))),
-                    ];
-                    break;
-                case Pages.fashion:
-                    mergedImages = [
-                        ...(await ImageDataGetter.getFashionImagesFromPage((pageCountForPagination * 3) - 2)),
-                        ...(await ImageDataGetter.getFashionImagesFromPage((pageCountForPagination * 3) - 1)),
-                        ...(await ImageDataGetter.getFashionImagesFromPage((pageCountForPagination * 3))),
-                    ];
-                    break;
+            const mergedImages = [
+                ImageDataGetter.getImagesFromPage(category, (pageCountForPagination * 3) - 2),
+                ImageDataGetter.getImagesFromPage(category, (pageCountForPagination * 3) - 1),
+                ImageDataGetter.getImagesFromPage(category, (pageCountForPagination * 3))
+            ];
+            const images = await Promise.all(mergedImages);
 
-                default:
-                    break;
-            }
+            setImages(images.flat());
+
+
             // can set previous page to false if page count is 1
             setCanPreviousPage(pageCount > 0);
-            // can set next page to false if page count is 3
-            setCanNextPage(pageCount === 9);
-            setImages(mergedImages);
+            // set can next page to false if there are no images
+            setCanNextPage(pageCount < 2);
 
             setIsFetching(false);
         } catch (error) {

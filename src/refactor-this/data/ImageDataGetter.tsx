@@ -1,14 +1,16 @@
-import React from 'react';
 
-interface Image {
-    url: string;
-    name: string;
-}
+import { Image } from '../models/Image';
 
-class ImageDataGetter extends React.Component {
+
+class ImageDataGetter {
 
     static async getImagesFromPage(category: string, page: number): Promise<Image[]> {
         try {
+            /// check if category is valid from [Pages] enum
+            if (!category) {
+                throw new Error('Category is required');
+            }
+
             const response = await fetch(`http://localhost:8888/images?category=${category.toLowerCase()}&page=${page}`);
             const result = await response.json();
             return result as Image[];
@@ -16,19 +18,6 @@ class ImageDataGetter extends React.Component {
             console.error('Error fetching images from page:', error);
             return [];
         }
-    }
-
-
-    static async getNatureImagesFromPage(page: number): Promise<Image[]> {
-        return ImageDataGetter.getImagesFromPage('nature', page);
-    }
-
-    static async getArchitectureImagesFromPage(page: number): Promise<Image[]> {
-        return ImageDataGetter.getImagesFromPage('architecture', page);
-    }
-
-    static async getFashionImagesFromPage(page: number): Promise<Image[]> {
-        return ImageDataGetter.getImagesFromPage('fashion', page);
     }
 }
 

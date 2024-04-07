@@ -5,7 +5,7 @@
   "main": "src/refactor-this/index.js",
   "scripts": {
     "start": "node src/do-not-refactor/server.js | vite src/refactor-this",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest"
   },
   "repository": {
     "type": "git",
@@ -26,12 +26,15 @@
     "cors": "^2.8.5",
     "esbuild": "^0.20.2",
     "express": "^4.17.1",
+    "file-saver": "^2.0.5",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-icons": "^5.0.1",
     "react-loading-indicators": "^0.2.3"
   },
   "devDependencies": {
+    "@types/file-saver": "^2.0.7",
+    "@types/jest": "^29.5.12",
     "@types/react": "^18.2.74",
     "@types/react-dom": "^18.2.22",
     "@typescript-eslint/eslint-plugin": "^7.2.0",
@@ -41,9 +44,11 @@
     "eslint": "^8.57.0",
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-refresh": "^0.4.6",
+    "jest": "^29.7.0",
     "postcss": "^8.4.38",
     "tailwindcss": "^3.4.3",
-    "typescript": "^5.2.2",
+    "ts-jest": "^29.1.2",
+    "typescript": "^5.4.4",
     "vite": "^5.2.0"
   }
 }
