@@ -4,7 +4,10 @@
   "description": "Valhalla Technical Test",
   "main": "src/refactor-this/index.js",
   "scripts": {
-    "start": "node src/do-not-refactor/server.js | vite src/refactor-this",
+    "start": "node src/do-not-refactor/server.js | vite src/refactor-this --host",
+    "dev": "node src/do-not-refactor/server.js | vite src/refactor-this --host",
+    "build": "tsc && vite build",
+    "serve": "vite preview",
     "test": "jest"
   },
   "repository": {
